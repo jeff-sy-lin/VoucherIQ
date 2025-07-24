@@ -18,6 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
         calculateButton: document.getElementById('calculate'),
 
         totalSpend: document.getElementById('totalSpend'),
+        budgetStatus: document.getElementById('budgetStatus'),
+        budgetTitle: document.getElementById('budgetTitle'),
         budgetValue: document.getElementById('budgetValue'),
         utilization: document.getElementById('utilization'),
         totalTrips: document.getElementById('totalTrips'),
@@ -219,10 +221,19 @@ document.addEventListener('DOMContentLoaded', () => {
             currency: 'USD',
         }).format(total);
 
+        let budgetValue = programBudget - total;
+
+        dom.budgetStatus.classList.remove("budget-under", "budget-over");
+        if (budgetValue > 0) {
+            dom.budgetStatus.classList.add("budget-under");
+        } else {
+            dom.budgetStatus.classList.add("budget-over");
+        }
+        dom.budgetTitle.innerText = budgetValue > 0 ? "Under Budget by" : "Over Budget by";
         dom.budgetValue.innerHTML = new Intl.NumberFormat('en-US', {
             style: 'currency',
             currency: 'USD',
-        }).format(programBudget - total);
+        }).format(Math.abs(budgetValue));
 
         dom.utilization.innerHTML = new Intl.NumberFormat('en-US', {
             style: 'percent',
@@ -254,7 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dom.totalRiderCost.innerText = new Intl.NumberFormat('en-US', {
             style: 'currency',
             currency: 'USD',
-        }).format(Math.max(avgFare - maxSubsidy, 0) * totalTrips);
+        }).format(Math.max(avgFare - maxSubsidy, 0) * totalTrips / avgTripsPerRider);
     }
 
 
